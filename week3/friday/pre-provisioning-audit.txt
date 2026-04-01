@@ -1,0 +1,23 @@
+=== Service Accounts ===
+=== Group ===
+=== Directory Listing ===
+=== ACLs on shared/logs ===
+=== ACLs on config ===
+=== UFW Status ===
+Status: inactive
+=== Package Holds ===
+=== Systemd Units ===
+=== kk-api Security Score ===
+=== Log Size ===
+=== Journal Disk Usage ===
+Archived and active journals take up 64.0M in the file system.
+
+=== AUDIT INTERPRETATION ===
+# Expected dirty conditions found in pre-provisioning audit:
+# - No service accounts exist (kk-api, kk-payments, kk-logs): will create in Phase 2
+# - No kijanikiosk group exists: will create in Phase 2
+# - /opt/kijanikiosk/ does not exist: will create in Phase 3
+# - No ACLs set: will configure in Phase 3
+# - UFW is inactive with no rules: will configure in Phase 5
+# - No package holds set: will set in Phase 1
+# - No systemd units exist: will create in Phase 6

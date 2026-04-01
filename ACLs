@@ -1,0 +1,26 @@
+=== UFW Status ===
+Status: active
+
+     To                         Action      From
+     --                         ------      ----
+[ 1] 22/tcp                     ALLOW IN    Anywhere                   # SSH access for administration
+[ 2] 80/tcp                     ALLOW IN    Anywhere                   # HTTP public web traffic via nginx
+[ 3] 3000                       ALLOW IN    10.0.1.0/24                # Monitoring subnet access to kk-api
+[ 4] 3001                       ALLOW IN    127.0.0.1                  # Loopback access to kk-payments for nginx proxy
+[ 5] 3001                       ALLOW IN    10.0.1.0/24                # Monitoring subnet health check for kk-payments
+[ 6] 3001                       DENY IN     Anywhere                   # Block external access to kk-payments internal port
+[ 7] 22/tcp (v6)                ALLOW IN    Anywhere (v6)              # SSH access for administration
+[ 8] 80/tcp (v6)                ALLOW IN    Anywhere (v6)              # HTTP public web traffic via nginx
+[ 9] 3001 (v6)                  DENY IN     Anywhere (v6)              # Block external access to kk-payments internal port
+
+=== ACLs on shared/logs ===
+=== ACLs on config ===
+=== ACLs on health ===
+=== Force logrotate ===
+=== Logrotate access test ===
+PASS: kk-api can write after logrotate
+=== Health JSON ===
+=== Hardening Scores ===
+→ Overall exposure level for kk-api.service: 2.6 OK 🙂
+→ Overall exposure level for kk-payments.service: 1.8 OK 🙂
+→ Overall exposure level for kk-logs.service: 2.6 OK 🙂

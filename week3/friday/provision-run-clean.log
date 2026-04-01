@@ -1,0 +1,132 @@
+[2026-03-31 17:39:40] ========================================
+[2026-03-31 17:39:40] KijaniKiosk Provisioning Script Starting
+[2026-03-31 17:39:40] ========================================
+[2026-03-31 17:39:40] --- Phase 1: Package Installation & Pinning ---
+[2026-03-31 17:39:40] Installing: nginx
+Reading package lists...
+Building dependency tree...
+Reading state information...
+nginx is already the newest version (1.18.0-6ubuntu14.8).
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+[2026-03-31 17:39:40] Installing: curl
+Reading package lists...
+Building dependency tree...
+Reading state information...
+curl is already the newest version (7.81.0-1ubuntu1.23).
+0 upgraded, 0 newly installed, 0 to remove and 0 not upgraded.
+[2026-03-31 17:39:40] Already installed: ufw
+[2026-03-31 17:39:40] Already installed: acl
+[2026-03-31 17:39:40] Already held: nginx
+[2026-03-31 17:39:40] Already held: curl
+[2026-03-31 17:39:40] ✓ Phase 1 complete
+[2026-03-31 17:39:40] --- Phase 2: Service Accounts & Group ---
+[2026-03-31 17:39:40] Already exists: group kijanikiosk
+[2026-03-31 17:39:40] Already exists: user kk-api
+[2026-03-31 17:39:40] Already exists: user kk-payments
+[2026-03-31 17:39:40] Already exists: user kk-logs
+[2026-03-31 17:39:40] ✓ Confirmed kk-api in kijanikiosk group
+[2026-03-31 17:39:40] ✓ Confirmed kk-payments in kijanikiosk group
+[2026-03-31 17:39:40] ✓ Confirmed kk-logs in kijanikiosk group
+[2026-03-31 17:39:40] ✓ Phase 2 complete
+[2026-03-31 17:39:40] --- Phase 3: Directory Structure & ACLs ---
+[2026-03-31 17:39:40] Already exists: /opt/kijanikiosk
+[2026-03-31 17:39:40] Already exists: /opt/kijanikiosk/shared
+[2026-03-31 17:39:40] Already exists: /opt/kijanikiosk/shared/logs
+[2026-03-31 17:39:40] Already exists: /opt/kijanikiosk/config
+[2026-03-31 17:39:40] Already exists: /opt/kijanikiosk/health
+[2026-03-31 17:39:40] Already exists: /opt/kijanikiosk/config/api.env
+[2026-03-31 17:39:40] Already exists: /opt/kijanikiosk/config/payments-api.env
+[2026-03-31 17:39:40] Already exists: /opt/kijanikiosk/config/logs.env
+[2026-03-31 17:39:40] ✓ Phase 3 complete
+[2026-03-31 17:39:40] --- Phase 4: Nginx Configuration ---
+[2026-03-31 17:39:40] Already enabled: nginx kijanikiosk site
+[2026-03-31 17:39:40] Already removed: nginx default site
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+[2026-03-31 17:39:40] ✓ Nginx config valid
+Synchronizing state of nginx.service with SysV service script with /lib/systemd/systemd-sysv-install.
+Executing: /lib/systemd/systemd-sysv-install enable nginx
+[2026-03-31 17:39:41] ✓ Nginx running
+[2026-03-31 17:39:41] ✓ Phase 4 complete
+[2026-03-31 17:39:41] --- Phase 5: Firewall Configuration ---
+Backing up 'user.rules' to '/etc/ufw/user.rules.20260331_173942'
+Backing up 'before.rules' to '/etc/ufw/before.rules.20260331_173942'
+Backing up 'after.rules' to '/etc/ufw/after.rules.20260331_173942'
+Backing up 'user6.rules' to '/etc/ufw/user6.rules.20260331_173942'
+Backing up 'before6.rules' to '/etc/ufw/before6.rules.20260331_173942'
+Backing up 'after6.rules' to '/etc/ufw/after6.rules.20260331_173942'
+
+[2026-03-31 17:39:42] ✓ UFW reset to clean baseline
+Default incoming policy changed to 'deny'
+(be sure to update your rules accordingly)
+Default outgoing policy changed to 'allow'
+(be sure to update your rules accordingly)
+[2026-03-31 17:39:42] ✓ Default policies set
+Rules updated
+Rules updated (v6)
+[2026-03-31 17:39:42] ✓ Rule added: SSH (22)
+Rules updated
+Rules updated (v6)
+[2026-03-31 17:39:43] ✓ Rule added: HTTP (80)
+Rules updated
+[2026-03-31 17:39:43] ✓ Rule added: kk-api monitoring (3000 from 10.0.1.0/24)
+Rules updated
+[2026-03-31 17:39:43] ✓ Rule added: kk-payments loopback (3001 from 127.0.0.1)
+Rules updated
+[2026-03-31 17:39:43] ✓ Rule added: kk-payments monitoring (3001 from 10.0.1.0/24)
+Rules updated
+Rules updated (v6)
+[2026-03-31 17:39:43] ✓ Rule added: deny external kk-payments (3001)
+Firewall is active and enabled on system startup
+[2026-03-31 17:39:44] ✓ UFW enabled
+[2026-03-31 17:39:44] ✓ Phase 5 complete
+[2026-03-31 17:39:44] --- Phase 6: Systemd Unit Files ---
+[2026-03-31 17:39:44] ✓ Written: kk-api.service
+[2026-03-31 17:39:44] ✓ Written: kk-payments.service
+[2026-03-31 17:39:44] ✓ Written: kk-logs.service
+[2026-03-31 17:39:44] ✓ Systemd daemon reloaded
+[2026-03-31 17:39:44] ✓ Enabled: kk-api
+[2026-03-31 17:39:44] ✓ Enabled: kk-payments
+[2026-03-31 17:39:44] ✓ Enabled: kk-logs
+[2026-03-31 17:39:44] ✓ Phase 6 complete
+[2026-03-31 17:39:44] --- Phase 7: Journal Persistence & Log Rotation ---
+[2026-03-31 17:39:44] ✓ Journal persistence configured (500MB cap)
+[2026-03-31 17:39:44] ✓ journald restarted
+[2026-03-31 17:39:44] ✓ Logrotate config written
+[2026-03-31 17:39:44] ✓ Logrotate config valid (--debug passed)
+[2026-03-31 17:39:44] ✓ Phase 7 complete
+[2026-03-31 17:39:44] --- Phase 8: Monitoring Health Checks ---
+[2026-03-31 17:39:44] ✓ Health check written:
+{"timestamp":"2026-03-31T17:39:44+00:00","kk-api":"down","kk-payments":"down","kk-logs":"down"}
+[2026-03-31 17:39:44] ✓ Phase 8 complete
+[2026-03-31 17:39:44] --- Final Verification ---
+[2026-03-31 17:39:44] ✓ PASS: nginx is installed
+[2026-03-31 17:39:44] ✓ PASS: curl is installed
+[2026-03-31 17:39:44] ✓ PASS: nginx is held
+[2026-03-31 17:39:44] ✓ PASS: curl is held
+[2026-03-31 17:39:44] ✓ PASS: group kijanikiosk exists
+[2026-03-31 17:39:44] ✓ PASS: user kk-api exists
+[2026-03-31 17:39:44] ✓ PASS: user kk-payments exists
+[2026-03-31 17:39:44] ✓ PASS: user kk-logs exists
+[2026-03-31 17:39:44] ✓ PASS: /opt/kijanikiosk exists
+[2026-03-31 17:39:44] ✓ PASS: /opt/kijanikiosk/shared/logs exists
+[2026-03-31 17:39:44] ✓ PASS: /opt/kijanikiosk/config exists
+[2026-03-31 17:39:44] ✓ PASS: /opt/kijanikiosk/health exists
+[2026-03-31 17:39:44] ✓ PASS: api.env exists
+[2026-03-31 17:39:44] ✓ PASS: payments-api.env exists
+[2026-03-31 17:39:44] ✓ PASS: nginx config valid
+[2026-03-31 17:39:44] ✓ PASS: nginx is running
+[2026-03-31 17:39:44] ✓ PASS: UFW is active
+[2026-03-31 17:39:44] ✓ PASS: SSH rule exists
+[2026-03-31 17:39:44] ✓ PASS: HTTP rule exists
+[2026-03-31 17:39:44] ✓ PASS: port 3001 deny exists
+[2026-03-31 17:39:44] ✓ PASS: kk-api.service exists
+[2026-03-31 17:39:44] ✓ PASS: kk-payments.service exists
+[2026-03-31 17:39:44] ✓ PASS: kk-logs.service exists
+[2026-03-31 17:39:44] ✓ PASS: journal config exists
+[2026-03-31 17:39:44] ✓ PASS: logrotate config exists
+[2026-03-31 17:39:44] ✓ PASS: logrotate config valid
+[2026-03-31 17:39:44] ✓ PASS: health JSON exists
+[2026-03-31 17:39:44] ✓ PASS: health JSON readable
+[2026-03-31 17:39:44] ========================================
+[2026-03-31 17:39:44] ✓ All verification checks passed!
