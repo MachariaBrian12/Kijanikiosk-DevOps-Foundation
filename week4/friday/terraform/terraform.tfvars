@@ -1,0 +1,5 @@
+aws_region       = "us-east-1"
+instance_type    = "t2.micro"
+key_name         = "kijanikiosk"
+environment      = "staging"
+allowed_ssh_cidr = "0.0.0.0/0"
