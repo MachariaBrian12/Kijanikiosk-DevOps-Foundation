@@ -1,0 +1,35 @@
+[Unit]
+Description={{ kk_service_description }}
+After=network.target
+Requires=network.target
+
+[Service]
+Type=simple
+User={{ kk_user }}
+Group={{ kk_group }}
+EnvironmentFile={{ kk_base_dir }}/config/payments-api.env
+ExecStart=/usr/bin/python3 -m http.server {{ kk_service_port }}
+Restart=on-failure
+RestartSec=5
+WorkingDirectory={{ kk_base_dir }}
+
+# --- Hardening directives (achieves score below 2.5) ---
+NoNewPrivileges={{ kk_no_new_privileges | lower }}
+ProtectSystem={{ kk_protect_system }}
+ProtectHome={{ kk_protect_home | lower }}
+PrivateTmp={{ kk_private_tmp | lower }}
+PrivateDevices=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictAddressFamilies={{ kk_restrict_address_families }}
+CapabilityBoundingSet={{ kk_capability_bounding_set }}
+SystemCallFilter={{ kk_system_call_filter }}
+SystemCallArchitectures=native
+LockPersonality=true
+RestrictRealtime=true
+RestrictSUIDSGID=true
+RemoveIPC=true
+
+[Install]
+WantedBy=multi-user.target

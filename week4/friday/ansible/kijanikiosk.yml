@@ -1,0 +1,129 @@
+---
+- name: Configure KijaniKiosk servers
+  hosts: kijanikiosk
+  become: true
+
+  handlers:
+    - name: restart journald
+      systemd:
+        name: systemd-journald
+        state: restarted
+
+    - name: restart kk-payments
+      systemd:
+        name: kk-payments
+        state: restarted
+        enabled: true
+
+  tasks:
+
+    # --- Phase 1: Packages ---
+    - name: Update apt cache
+      apt:
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Install required packages
+      apt:
+        name: "{{ kk_packages }}"
+        state: present
+
+    # --- Phase 2: Service accounts ---
+    - name: Create kijanikiosk group
+      group:
+        name: "{{ kk_group }}"
+        system: true
+        state: present
+
+    - name: Create kijanikiosk user
+      user:
+        name: "{{ kk_user }}"
+        group: "{{ kk_group }}"
+        system: true
+        shell: /usr/sbin/nologin
+        home: "{{ kk_base_dir }}"
+        create_home: false
+        state: present
+
+    # --- Phase 3: Directory structure ---
+    - name: Create kijanikiosk directories
+      file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ kk_user }}"
+        group: "{{ kk_group }}"
+        mode: "0750"
+      loop: "{{ kk_dirs }}"
+
+    # --- Phase 4: Systemd unit files ---
+    - name: Deploy kk-payments systemd unit
+      template:
+        src: payments.service.j2
+        dest: /etc/systemd/system/kk-payments.service
+        owner: root
+        group: root
+        mode: "0644"
+      when: kk_server_role == "payments"
+      notify: restart kk-payments
+
+    - name: Deploy payments environment file
+      template:
+        src: payments-api.env.j2
+        dest: "{{ kk_base_dir }}/config/payments-api.env"
+        owner: "{{ kk_user }}"
+        group: "{{ kk_group }}"
+        mode: "0640"
+      when: kk_server_role == "payments"
+      notify: restart kk-payments
+
+    - name: Reload systemd daemon
+      systemd:
+        daemon_reload: true
+      when: kk_server_role == "payments"
+
+    - name: Enable and start kk-payments
+      systemd:
+        name: kk-payments
+        state: started
+        enabled: true
+      when: kk_server_role == "payments"
+
+    # --- Phase 5: Firewall rules ---
+    - name: Enable UFW
+      ufw:
+        state: enabled
+        policy: deny
+
+    - name: Allow required ports
+      ufw:
+        rule: allow
+        port: "{{ item.split('/')[0] }}"
+        proto: "{{ item.split('/')[1] }}"
+      loop: "{{ kk_firewall_ports }}"
+
+    # --- Phase 6: Journal persistence ---
+    - name: Deploy journald configuration
+      template:
+        src: journald.conf.j2
+        dest: /etc/systemd/journald.conf
+        owner: root
+        group: root
+        mode: "0644"
+      notify: restart journald
+
+    - name: Ensure journal directory exists
+      file:
+        path: /var/log/journal
+        state: directory
+        owner: root
+        group: systemd-journal
+        mode: "2755"
+
+    # --- Phase 7: Logrotate ---
+    - name: Deploy logrotate configuration
+      template:
+        src: logrotate.j2
+        dest: /etc/logrotate.d/kijanikiosk
+        owner: root
+        group: root
+        mode: "0644"

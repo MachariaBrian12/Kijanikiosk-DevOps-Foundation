@@ -1,0 +1,13 @@
+kk_server_role: payments
+kk_service_name: kk-payments
+kk_service_port: 8081
+kk_service_description: "KijaniKiosk Payments Service"
+
+# Payments-specific hardening (systemd security directives)
+kk_protect_system: strict
+kk_no_new_privileges: true
+kk_private_tmp: true
+kk_protect_home: true
+kk_restrict_address_families: "AF_INET AF_INET6"
+kk_capability_bounding_set: "CAP_NET_BIND_SERVICE"
+kk_system_call_filter: "@system-service"

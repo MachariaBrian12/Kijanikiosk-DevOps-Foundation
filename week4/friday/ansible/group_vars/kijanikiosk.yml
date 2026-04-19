@@ -1,0 +1,40 @@
+# SSH connection settings
+ansible_user: ubuntu
+ansible_ssh_private_key_file: ~/.ssh/kijanikiosk
+ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+
+# KijaniKiosk shared settings
+kk_environment: staging
+kk_base_dir: /opt/kijanikiosk
+kk_user: kk-payments
+kk_group: kk-payments
+
+# Directory structure
+kk_dirs:
+  - /opt/kijanikiosk
+  - /opt/kijanikiosk/config
+  - /opt/kijanikiosk/logs
+  - /opt/kijanikiosk/bin
+
+# Packages to install on all servers
+kk_packages:
+  - curl
+  - wget
+  - unzip
+  - ufw
+  - python3
+  - systemd-journal-remote
+
+# Firewall: ports open on all servers
+kk_firewall_ports:
+  - "22/tcp"
+  - "80/tcp"
+  - "443/tcp"
+
+# Logrotate settings
+kk_logrotate_rotate: 14
+kk_logrotate_size: "100M"
+
+# Journald persistence
+kk_journal_storage: persistent
+kk_journal_max_use: "500M"

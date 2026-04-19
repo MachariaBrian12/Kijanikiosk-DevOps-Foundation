@@ -1,0 +1,4 @@
+kk_server_role: api
+kk_service_name: kk-api
+kk_service_port: 8080
+kk_service_description: "KijaniKiosk API Server"

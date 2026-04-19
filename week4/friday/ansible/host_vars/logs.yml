@@ -1,0 +1,4 @@
+kk_server_role: logs
+kk_service_name: kk-logs
+kk_service_port: 8082
+kk_service_description: "KijaniKiosk Log Aggregation Service"

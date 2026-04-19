@@ -1,0 +1,10 @@
+{{ kk_base_dir }}/logs/*.log {
+    daily
+    rotate {{ kk_logrotate_rotate }}
+    size {{ kk_logrotate_size }}
+    compress
+    delaycompress
+    missingok
+    notifempty
+    create 0640 {{ kk_user }} {{ kk_group }}
+}
