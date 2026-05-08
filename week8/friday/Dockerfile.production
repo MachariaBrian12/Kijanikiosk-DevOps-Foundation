@@ -1,0 +1,19 @@
+# Stage 1: build
+FROM node:18-alpine AS builder
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY src/ ./src/
+
+# Stage 2: production
+FROM node:18-alpine
+RUN addgroup -S kijani && adduser -S kijani -G kijani
+WORKDIR /app
+COPY --from=builder /app/package*.json ./
+COPY --from=builder /app/src ./src
+RUN chown -R kijani:kijani /app
+USER kijani
+EXPOSE 3001
+HEALTHCHECK --interval=10s --timeout=5s --start-period=30s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:3001/health || exit 1
+CMD ["node", "src/index.js"]

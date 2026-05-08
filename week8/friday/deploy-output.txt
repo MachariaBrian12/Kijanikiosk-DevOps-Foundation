@@ -1,0 +1,29 @@
+============================================================
+KIJANIKIOSK DEPLOY OUTPUT
+Date: 2026-05-08
+Engineer: Brian
+============================================================
+
+--- NAMESPACE RESET ---
+$ kubectl delete deployment kk-payments
+$ kubectl delete service kk-payments-service
+
+--- APPLY MANIFESTS ---
+$ kubectl apply -f kk-payments-deployment.yaml
+deployment.apps/kk-payments created
+
+$ kubectl apply -f kk-payments-service.yaml
+service/kk-payments-service created
+
+--- DEPLOYMENT STATUS ---
+$ kubectl get deployment kk-payments
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+kk-payments   2/2     2            2           82s
+
+--- POD STATUS ---
+$ kubectl get pods -l app=kk-payments
+NAME                          READY   STATUS    RESTARTS   AGE
+kk-payments-b64756585-bgznw   1/1     Running   0          48s
+kk-payments-b64756585-l2jsc   1/1     Running   0          48s
+
+RESULT: READY 2/2. Both pods running. PASS.
