@@ -1,0 +1,6 @@
+# Never commit live Secrets manifests
+kk-payments-secrets.yaml
+*-secrets.yaml
+!*-secrets.yaml.example
+.env
+*.pem
