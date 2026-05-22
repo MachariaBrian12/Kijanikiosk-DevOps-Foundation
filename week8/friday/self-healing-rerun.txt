@@ -1,0 +1,38 @@
+============================================================
+KIJANIKIOSK SELF-HEALING EVIDENCE
+Date: 2026-05-08
+Engineer: Brian
+Fresh deployment — pod names differ from any Thursday evidence
+============================================================
+
+--- PODS BEFORE DELETION ---
+NAME                          READY   STATUS    RESTARTS   AGE
+kk-payments-b64756585-bgznw   1/1     Running   0          6m28s
+kk-payments-b64756585-l2jsc   1/1     Running   0          6m28s
+
+--- FAULT INTRODUCTION ---
+T0 = 06:36:13
+$ kubectl delete pod kk-payments-b64756585-bgznw
+pod "kk-payments-b64756585-bgznw" deleted
+
+--- KUBERNETES SELF-HEALING ---
+NAME                          READY   STATUS              RESTARTS   AGE
+kk-payments-b64756585-l2jsc   1/1     Running             0          6m47s
+kk-payments-b64756585-pbrx7   0/1     ContainerCreating   0          0s
+kk-payments-b64756585-pbrx7   1/1     Running             0          39s
+
+--- RECOVERY CONFIRMED ---
+T1 = 06:37:30
+
+New pod name: kk-payments-b64756585-pbrx7
+Original pod name: kk-payments-b64756585-bgznw
+Pod names are different — confirms fresh deployment, not reused evidence.
+
+--- TIMING SUMMARY ---
+T0 (pod deleted):           06:36:13
+T1 (replacement Running):   06:37:30
+Recovery time:              77 seconds
+
+RESULT: Kubernetes detected the missing pod and scheduled a replacement automatically.
+No human action was taken between T0 and T1.
+============================================================

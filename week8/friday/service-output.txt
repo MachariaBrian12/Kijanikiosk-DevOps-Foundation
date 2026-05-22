@@ -1,0 +1,21 @@
+============================================================
+KIJANIKIOSK SERVICE OUTPUT
+Date: 2026-05-08
+Engineer: Brian
+============================================================
+
+--- ENDPOINTS ---
+$ kubectl get endpoints kk-payments-service
+NAME                  ENDPOINTS                           AGE
+kk-payments-service   10.244.0.14:3001,10.244.0.15:3001   82s
+
+RESULT: Two Pod IPs listed. Service routing to both pods. PASS.
+
+--- HEALTH CHECK VIA NODEPORT ---
+$ minikube service kk-payments-service --url
+http://127.0.0.1:61477
+
+$ curl http://127.0.0.1:61477/health
+{"status":"healthy","service":"kijanikiosk-payments","version":"1.0.0","timestamp":"2026-05-08T03:35:44.416Z"}
+
+RESULT: Health endpoint responds through NodePort with correct version 1.0.0. PASS.

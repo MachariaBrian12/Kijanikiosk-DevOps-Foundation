@@ -1,0 +1,80 @@
+============================================================
+KIJANIKIOSK AUTOMATED ROLLBACK EVIDENCE
+Engineer: Brian
+Date: 2026-05-07
+============================================================
+
+MONITOR LOG — FULL SEQUENCE (second run — fault injected before confidence window expired)
+
+[2026-05-07 10:15:19] post-deploy-monitor: Starting. Confidence window: 60 seconds.
+[2026-05-07 10:15:19] post-deploy-monitor: Polling interval: 5s. Failure threshold: 3.
+[2026-05-07 10:15:19] post-deploy-monitor: Waiting for active environment to become green...
+[2026-05-07 10:15:24] post-deploy-monitor: Waiting for active environment to become green...
+[2026-05-07 10:15:29] post-deploy-monitor: Waiting for active environment to become green...
+[2026-05-07 10:15:34] post-deploy-monitor: Detected active environment is now GREEN. Beginning confidence window.
+[2026-05-07 10:15:34] post-deploy-monitor: Health check OK — HTTP 200 — version: v1.4.0
+[2026-05-07 10:15:39] post-deploy-monitor: Health check OK — HTTP 200 — version: v1.4.0
+
+============================================================
+T0 — FAULT INTRODUCED
+============================================================
+T0 = 10:15:42
+Command: sudo systemctl stop kk-api-green.service
+
+[2026-05-07 10:15:44] post-deploy-monitor: Health check FAILED — HTTP 502 — consecutive failures: 1 of 3
+[2026-05-07 10:15:49] post-deploy-monitor: Health check FAILED — HTTP 502 — consecutive failures: 2 of 3
+[2026-05-07 10:15:54] post-deploy-monitor: Health check FAILED — HTTP 502 — consecutive failures: 3 of 3
+
+============================================================
+T1 — AUTOMATED ROLLBACK TRIGGERED
+============================================================
+T1 = 10:15:54
+[2026-05-07 10:15:54] post-deploy-monitor: *** Triggering automated rollback ***
+[2026-05-07 10:15:54] rollback.sh: Rollback initiated.
+[2026-05-07 10:15:54] rollback.sh: Rolling back to: blue
+[2026-05-07 10:15:54] switch-env.sh: Target: blue
+[2026-05-07 10:15:54] switch-env.sh: Current: green
+[2026-05-07 10:15:54] switch-env.sh: Health check PASSED
+[2026-05-07 10:15:54] switch-env.sh: Config written
+[2026-05-07 10:15:54] switch-env.sh: nginx reloaded
+[2026-05-07 10:15:54] switch-env.sh: .active-env -> blue
+[2026-05-07 10:15:54] switch-env.sh: .previous-env -> green
+[2026-05-07 10:15:54] switch-env.sh: Switch to blue complete. Exit 0.
+[2026-05-07 10:15:54] rollback.sh: Rollback to blue complete. Exit 0.
+
+============================================================
+T2 — ROLLBACK CONFIRMED
+============================================================
+T2 = 10:15:56
+[2026-05-07 10:15:56] post-deploy-monitor: *** Rollback confirmed. blue (v1.3.0) is healthy through the proxy. ***
+[2026-05-07 10:15:56] post-deploy-monitor: Exiting monitor. Exit 0.
+
+============================================================
+TIMING SUMMARY
+============================================================
+T0 (fault introduced):              10:15:42
+T1 (rollback triggered):            10:15:54
+T2 (rollback confirmed):            10:15:56
+
+T0 to T1 (detection time):  12 seconds
+T1 to T2 (rollback execution): 2 seconds
+T0 to T2 (TOTAL DURATION):  14 seconds
+
+RESULT: 14 seconds — UNDER 90 second requirement. PASS.
+
+============================================================
+POST-ROLLBACK STATE VERIFICATION
+============================================================
+
+{
+    "status": "healthy",
+    "version": "v1.3.0",
+    "environment": "blue",
+    "uptime_seconds": 2650,
+    "timestamp": "2026-05-07T10:19:40.260Z"
+}
+
+active-env: blue
+previous-env: green
+kk-api-blue.service: active
+kk-api-green.service: inactive

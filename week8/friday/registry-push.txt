@@ -1,0 +1,46 @@
+============================================================
+KIJANIKIOSK REGISTRY PUSH EVIDENCE
+Date: 2026-05-08
+Engineer: Brian
+============================================================
+
+--- VERSION STRING COMPUTATION ---
+$ VERSION=$(node -p "require('./package.json').version")
+$ GITSHA=$(git rev-parse --short HEAD)
+$ TAG="${VERSION}-${GITSHA}"
+$ echo "Tag will be: $TAG"
+Tag will be: 1.0.0-982aef3
+
+--- TAG APPLIED ---
+$ docker tag machariabrian12/kk-payments:latest machariabrian12/kk-payments:1.0.0-982aef3
+
+--- PUSH OUTPUT ---
+$ docker push machariabrian12/kk-payments:1.0.0-982aef3
+The push refers to repository [docker.io/machariabrian12/kk-payments]
+02bb84e9f341: Layer already exists
+20ef4698c661: Already exists
+954d9e76db90: Pushed
+6e771e15690e: Layer already exists
+8bfa36aa66ce: Layer already exists
+a04bb2cc4a08: Layer already exists
+d84c815451ac: Layer already exists
+b8005a729386: Layer already exists
+0128f6b2c258: Layer already exists
+444d20b151e1: Layer already exists
+1.0.0-982aef3: digest: sha256:a5bfbadc3d281e94cf22764f2dc1b20db53a7c6a392df2c1d16bcdc28ea2036f size: 856
+
+--- DELETE AND PULL VERIFICATION ---
+$ docker rmi machariabrian12/kk-payments:1.0.0-982aef3
+Untagged: machariabrian12/kk-payments:1.0.0-982aef3
+
+$ docker pull machariabrian12/kk-payments:1.0.0-982aef3
+1.0.0-982aef3: Pulling from machariabrian12/kk-payments
+Digest: sha256:a5bfbadc3d281e94cf22764f2dc1b20db53a7c6a392df2c1d16bcdc28ea2036f
+Status: Downloaded newer image for machariabrian12/kk-payments:1.0.0-982aef3
+docker.io/machariabrian12/kk-payments:1.0.0-982aef3
+
+RESULT: Image successfully pushed to Docker Hub and pulled fresh. Registry is source of truth. PASS.
+
+--- CREDENTIAL AUDIT ---
+No tokens, passwords, or credentials appear in any committed file.
+Image is public on Docker Hub. imagePullSecrets field references kijani-registry-credentials by name only.

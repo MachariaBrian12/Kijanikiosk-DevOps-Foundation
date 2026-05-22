@@ -1,0 +1,44 @@
+============================================================
+KIJANIKIOSK BUILD VERIFICATION
+Date: 2026-05-08
+Engineer: Brian
+============================================================
+
+--- BUILD COMMAND ---
+docker build --no-cache -f Dockerfile.production -t machariabrian12/kk-payments:latest .
+
+--- BUILD RESULT ---
+Build completed successfully. Exit 0.
+Multi-stage build: builder stage (node:18-alpine) -> production stage (node:18-alpine)
+
+--- IMAGE SIZE ---
+IMAGE                                TAG       SIZE
+machariabrian12/kk-payments          latest    44.9MB
+
+RESULT: 44.9MB — UNDER 100MB requirement. PASS.
+
+--- USER VERIFICATION ---
+$ docker run --rm machariabrian12/kk-payments:latest whoami
+kijani
+
+RESULT: Running as kijani (non-root). PASS.
+
+--- TYPESCRIPT COMPILER CHECK ---
+$ docker run --rm machariabrian12/kk-payments:latest which tsc
+(no output)
+
+RESULT: No TypeScript compiler in image. PASS.
+
+--- HEALTHCHECK ---
+HEALTHCHECK --interval=10s --timeout=5s --start-period=30s --retries=3
+CMD wget --no-verbose --tries=1 --spider http://localhost:3001/health || exit 1
+
+Container status after 30s: healthy
+
+--- SUMMARY ---
+All five verification checks passed:
+1. Multi-stage build: PASS
+2. Image under 100MB (44.9MB): PASS
+3. Non-root user (kijani): PASS
+4. No TypeScript compiler: PASS
+5. HEALTHCHECK present and functional: PASS
