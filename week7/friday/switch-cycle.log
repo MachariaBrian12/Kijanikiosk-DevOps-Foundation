@@ -1,0 +1,131 @@
+[?2004h]0;brian@brian-vm: ~[01;32mbrian@brian-vm[00m:[01;34m~[00m$ [7mecho "Switch cycle log started at $(date)"[27m[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cecho "Switch cycle log started at $(date)"
+[?2004lSwitch cycle log started at Thu May  7 10:00:31 UTC 2026
+[?2004h]0;brian@brian-vm: ~[01;32mbrian@brian-vm[00m:[01;34m~[00m$ [7mecho "=== STARTING STATE CONFIRMATION ==="[27m
+[7msystemctl is-active kk-api-blue.service[27m
+[7msystemctl is-active kk-api-green.service[27m
+[7mcurl -s http://127.0.0.1:3000/health | python3 -c "import sys,json; print(json.dumps(json.load(sys.stdin), indent=4))"[27m
+[7mcurl -s http://127.0.0.1:3001/health | python3 -c "import sys,json; print(json.dumps(json.load(sys.stdin), indent=4))"[27m
+[7msudo bash /opt/kijanikiosk/scripts/switch-env.sh blue[27m
+[7mcurl -s http://127.0.0.1:80/health | python3 -c "import sys,json; print(json.dumps(json.load(sys.stdin), indent=4))"[27m
+[7mcat /opt/kijanikiosk/.active-env[27m
+[7mcat /opt/kijanikiosk/.previous-env[27m[A[A[A[A[A[A[A[Aecho "=== STARTING STATE CONFIRMATION ==="
+systemctl is-active kk-api-blue.service
+systemctl is-active kk-api-green.service
+curl -s http://127.0.0.1:3000/health | python3 -c "import sys,json; print(json.dumps(json.load(sys.stdin), indent=4))"
+curl -s http://127.0.0.1:3001/health | python3 -c "import sys,json; print(json.dumps(json.load(sys.stdin), indent=4))"
+sudo bash /opt/kijanikiosk/scripts/switch-env.sh blue
+curl -s http://127.0.0.1:80/health | python3 -c "import sys,json; print(json.dumps(json.load(sys.stdin), indent=4))"
+cat /opt/kijanikiosk/.active-env
+cat /opt/kijanikiosk/.previous-env
+[?2004l=== STARTING STATE CONFIRMATION ===
+active
+active
+{
+    "status": "healthy",
+    "version": "v1.3.0",
+    "environment": "blue",
+    "uptime_seconds": 1634,
+    "timestamp": "2026-05-07T10:02:43.721Z"
+}
+{
+    "status": "healthy",
+    "version": "v1.4.0",
+    "environment": "green",
+    "uptime_seconds": 1634,
+    "timestamp": "2026-05-07T10:02:43.745Z"
+}
+[2026-05-07 10:02:43] switch-env.sh: Target: blue
+[2026-05-07 10:02:43] switch-env.sh: Current: blue
+[2026-05-07 10:02:43] switch-env.sh: Health check PASSED
+[2026-05-07 10:02:43] switch-env.sh: Config written
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+[2026-05-07 10:02:43] switch-env.sh: nginx reloaded
+[2026-05-07 10:02:43] switch-env.sh: .active-env -> blue
+[2026-05-07 10:02:43] switch-env.sh: .previous-env -> blue
+[2026-05-07 10:02:43] switch-env.sh: Switch to blue complete. Exit 0.
+{
+    "status": "healthy",
+    "version": "v1.3.0",
+    "environment": "blue",
+    "uptime_seconds": 1634,
+    "timestamp": "2026-05-07T10:02:43.798Z"
+}
+blue
+blue
+[?2004h]0;brian@brian-vm: ~[01;32mbrian@brian-vm[00m:[01;34m~[00m$ [7mecho "green" | sudo tee /opt/kijanikiosk/.previous-env[27m
+[7mcat /opt/kijanikiosk/.active-env[27m
+[7mcat /opt/kijanikiosk/.previous-env[27m[A[Aecho "green" | sudo tee /opt/kijanikiosk/.previous-env
+cat /opt/kijanikiosk/.active-env
+cat /opt/kijanikiosk/.previous-env
+[?2004lgreen
+blue
+green
+[?2004h]0;brian@brian-vm: ~[01;32mbrian@brian-vm[00m:[01;34m~[00m$ [7msudo bash /opt/kijanikiosk/scripts/post-deploy-monitor.sh 60[27m[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csudo bash /opt/kijanikiosk/scripts/post-deploy-monitor.sh 60
+[?2004l[2026-05-07 10:05:58] post-deploy-monitor: Starting. Confidence window: 60 seconds.
+[2026-05-07 10:05:58] post-deploy-monitor: Polling interval: 5s. Failure threshold: 3.
+[2026-05-07 10:05:58] post-deploy-monitor: Waiting for active environment to become green...
+[2026-05-07 10:06:03] post-deploy-monitor: Waiting for active environment to become green...
+[2026-05-07 10:06:08] post-deploy-monitor: Waiting for active environment to become green...
+[2026-05-07 10:06:13] post-deploy-monitor: Waiting for active environment to become green...
+[2026-05-07 10:06:18] post-deploy-monitor: Waiting for active environment to become green...
+[2026-05-07 10:06:23] post-deploy-monitor: Waiting for active environment to become green...
+[2026-05-07 10:06:28] post-deploy-monitor: Waiting for active environment to become green...
+[2026-05-07 10:06:33] post-deploy-monitor: Waiting for active environment to become green...
+[2026-05-07 10:06:38] post-deploy-monitor: Waiting for active environment to become green...
+[2026-05-07 10:06:43] post-deploy-monitor: Waiting for active environment to become green...
+[2026-05-07 10:06:48] post-deploy-monitor: Waiting for active environment to become green...
+[2026-05-07 10:06:53] post-deploy-monitor: Waiting for active environment to become green...
+[2026-05-07 10:06:58] post-deploy-monitor: Waiting for active environment to become green...
+[2026-05-07 10:07:03] post-deploy-monitor: Waiting for active environment to become green...
+[2026-05-07 10:07:08] post-deploy-monitor: Waiting for active environment to become green...
+[2026-05-07 10:07:13] post-deploy-monitor: Waiting for active environment to become green...
+[2026-05-07 10:07:18] post-deploy-monitor: Waiting for active environment to become green...
+[2026-05-07 10:07:23] post-deploy-monitor: Waiting for active environment to become green...
+[2026-05-07 10:07:28] post-deploy-monitor: Waiting for active environment to become green...
+[2026-05-07 10:07:33] post-deploy-monitor: Waiting for active environment to become green...
+[2026-05-07 10:07:38] post-deploy-monitor: Waiting for active environment to become green...
+[2026-05-07 10:07:43] post-deploy-monitor: Detected active environment is now GREEN. Beginning confidence window.
+[2026-05-07 10:07:43] post-deploy-monitor: Health check OK — HTTP 200 — version: v1.4.0 ✓
+[2026-05-07 10:07:48] post-deploy-monitor: Health check OK — HTTP 200 — version: v1.4.0 ✓
+[2026-05-07 10:07:53] post-deploy-monitor: Health check OK — HTTP 200 — version: v1.4.0 ✓
+[2026-05-07 10:07:58] post-deploy-monitor: Health check OK — HTTP 200 — version: v1.4.0 ✓
+[2026-05-07 10:08:03] post-deploy-monitor: Health check OK — HTTP 200 — version: v1.4.0 ✓
+[2026-05-07 10:08:08] post-deploy-monitor: Health check OK — HTTP 200 — version: v1.4.0 ✓
+[2026-05-07 10:08:13] post-deploy-monitor: Health check OK — HTTP 200 — version: v1.4.0 ✓
+[2026-05-07 10:08:18] post-deploy-monitor: Health check OK — HTTP 200 — version: v1.4.0 ✓
+[2026-05-07 10:08:23] post-deploy-monitor: Health check OK — HTTP 200 — version: v1.4.0 ✓
+[2026-05-07 10:08:28] post-deploy-monitor: Health check OK — HTTP 200 — version: v1.4.0 ✓
+[2026-05-07 10:08:33] post-deploy-monitor: Health check OK — HTTP 200 — version: v1.4.0 ✓
+[2026-05-07 10:08:38] post-deploy-monitor: Health check OK — HTTP 200 — version: v1.4.0 ✓
+[2026-05-07 10:08:43] post-deploy-monitor: Health check OK — HTTP 200 — version: v1.4.0 ✓
+[2026-05-07 10:08:43] post-deploy-monitor: Confidence window passed. Deployment healthy. Exiting.
+[?2004h]0;brian@brian-vm: ~[01;32mbrian@brian-vm[00m:[01;34m~[00m$ [7msudo bash /opt/kijanikiosk/scripts/post-deploy-monitor.sh 60[27m[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csudo bash /opt/kijanikiosk/scripts/post-deploy-monitor.sh 60
+[?2004l[2026-05-07 10:15:19] post-deploy-monitor: Starting. Confidence window: 60 seconds.
+[2026-05-07 10:15:19] post-deploy-monitor: Polling interval: 5s. Failure threshold: 3.
+[2026-05-07 10:15:19] post-deploy-monitor: Waiting for active environment to become green...
+[2026-05-07 10:15:24] post-deploy-monitor: Waiting for active environment to become green...
+[2026-05-07 10:15:29] post-deploy-monitor: Waiting for active environment to become green...
+[2026-05-07 10:15:34] post-deploy-monitor: Detected active environment is now GREEN. Beginning confidence window.
+[2026-05-07 10:15:34] post-deploy-monitor: Health check OK — HTTP 200 — version: v1.4.0 ✓
+[2026-05-07 10:15:39] post-deploy-monitor: Health check OK — HTTP 200 — version: v1.4.0 ✓
+[2026-05-07 10:15:44] post-deploy-monitor: Health check FAILED — HTTP 502 — consecutive failures: 1 of 3
+[2026-05-07 10:15:49] post-deploy-monitor: Health check FAILED — HTTP 502 — consecutive failures: 2 of 3
+[2026-05-07 10:15:54] post-deploy-monitor: Health check FAILED — HTTP 502 — consecutive failures: 3 of 3
+[2026-05-07 10:15:54] post-deploy-monitor: *** Triggering automated rollback ***
+[2026-05-07 10:15:54] rollback.sh: Rollback initiated.
+[2026-05-07 10:15:54] rollback.sh: Rolling back to: blue
+[2026-05-07 10:15:54] switch-env.sh: Target: blue
+[2026-05-07 10:15:54] switch-env.sh: Current: green
+[2026-05-07 10:15:54] switch-env.sh: Health check PASSED
+[2026-05-07 10:15:54] switch-env.sh: Config written
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+[2026-05-07 10:15:54] switch-env.sh: nginx reloaded
+[2026-05-07 10:15:54] switch-env.sh: .active-env -> blue
+[2026-05-07 10:15:54] switch-env.sh: .previous-env -> green
+[2026-05-07 10:15:54] switch-env.sh: Switch to blue complete. Exit 0.
+[2026-05-07 10:15:54] rollback.sh: Rollback to blue complete. Exit 0.
+[2026-05-07 10:15:56] post-deploy-monitor: *** Rollback confirmed. blue (v1.3.0) is healthy through the proxy. ***
+[2026-05-07 10:15:56] post-deploy-monitor: Exiting monitor. Exit 0.
+[?2004h]0;brian@brian-vm: ~[01;32mbrian@brian-vm[00m:[01;34m~[00m$ 
